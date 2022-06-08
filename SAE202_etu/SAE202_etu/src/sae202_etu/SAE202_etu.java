@@ -22,9 +22,9 @@ public class SAE202_etu {
     public static void main(String[] args) {
         // TODO code application logic here
 
-        long milli = 400000;
+        long milli = 4000000;
         Groupe12 test= new Groupe12();
-        test.challenge("colo-test", 5,milli);
+        test.challenge("colo-test",20,milli);
 //        test.chargerGraphe("colo-test0.txt");
 //         long temps = System.currentTimeMillis();
 //        test.colorierAlea(test.getGraph(),milli);
