@@ -5,8 +5,7 @@
  */
 package Groupes.Groupe12;
 
-import java.awt.Color;
-import java.util.Iterator;
+
 import org.graphstream.algorithm.coloring.WelshPowell;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
@@ -21,18 +20,15 @@ import packMesClassesEtInterfaces.SAE202_Interface;
  */
 public class Groupe12 implements SAE202_Interface {
 
-    private Graph graph;
-
-    public Graph getGraph() {
-        return graph;
-    }
-
     @Override
     public void challenge(String prefixeFichier, Integer nbFichiers, Long millisecondes) {
-        int graphe = 0;
+        int nbGraph = 0;
+        long temps = 0;
+        temps = System.currentTimeMillis();
         for (int i = 0; i < nbFichiers; i++) {
             Graph g = charger_graphe(prefixeFichier + i + ".txt");
-            Wheshp(g);
+            algoWelshPowell(g);
+           
 //        long temps = 0;
 //        while (temps < millisecondes - 10000) {
 //            temps = System.currentTimeMillis();
@@ -42,10 +38,12 @@ public class Groupe12 implements SAE202_Interface {
 //                   long temps=System.currentTimeMillis();
 //                temps=System.currentTimeMillis()-temps;
 //        temps=Math.toIntExact(temps)
-            afficheGraph(g);
-            System.out.println("graphe numero : " + graphe + " nombre de conflit : " + calculeNombreConflits(g));
-            graphe++;
+
+//            System.out.println("graphe numero : " + nbGraph + " nombre de conflit : " + calculeNombreConflits(g));
+            nbGraph++;
         }
+        temps = System.currentTimeMillis() - temps;
+        System.out.println(temps);
     }
 
     @Override
@@ -56,42 +54,45 @@ public class Groupe12 implements SAE202_Interface {
     public void afficheGraph(Graph g) {
         int cpt = 1;
         for (Node sommet : g.getEachNode()) {
+            System.out.println("couleur : "+(int)sommet.getAttribute("couleur"));
             cpt++;
-           
+
         }
     }
 
-    public Graph colorierAlea(Graph g, int millisecondes) {
-        int kmax = 0;
-        kmax = g.getAttribute("nb_couleurs_max");
+    public int colorierAlea(Graph g, int millisecondes) {
+        int kmax = g.getAttribute("nb_couleurs_max");
         for (Node sommet : g.getEachNode()) {
             sommet.setAttribute("couleur", (int) (Math.random() * kmax));
         }
-
-        return g;
+         return SAE202_Algos.compte_nb_conflits(g, "couleur");
     }
 
-    public void descente(Graph g) {
-        int kmax = 0;
-        kmax = g.getAttribute("nb_couleurs_max");
-        for (Node sommet : g.getEachNode()) {
-            for (int i = 0; i < kmax; i++) {
 
+    
+    public int algoWelshPowell(Graph g) {
+        int kmax = g.getAttribute("nb_couleurs_max");
+        WelshPowell wp = new WelshPowell("couleur");
+        wp.init(g);
+        wp.compute();
+        for(Node sommet : g.getEachNode()){
+            if((int)sommet.getAttribute("couleur")>kmax-1){
+                sommet.setAttribute("couleur",(int)Math.random()*kmax);
             }
         }
+//            System.out.println(SAE202_Algos.compte_nb_conflits(g, "couleur"));
+            return SAE202_Algos.compte_nb_conflits(g, "couleur");
     }
-
-    public int calculeNombreConflits(Graph g) {
-        return SAE202_Algos.compte_nb_conflits(g, "color");
-    }
-
-    public int Wheshp(Graph g) {
-         		WelshPowell wp = new WelshPowell("color");
- 		wp.init(g);
- 		wp.compute();
-        for (Node sommet : g.getEachNode()) {
-             System.out.println("couleur " + g.getAttribute("couleur"));
+    public int recuitSimulé(Graph g,int millisecondes){
+        algoWelshPowell(g);
+        int puissance=1;
+        double risque=Math.pow(0.5,puissance)*30;
+         for (int i = 0; i < 50; i++) {
+             
+            puissance++;
         }
-        return calculeNombreConflits(g);
+            
+        
+        return SAE202_Algos.compte_nb_conflits(g, "couleur");
     }
 }

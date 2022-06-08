@@ -24,14 +24,13 @@ public class SAE202_etu {
 
         long milli = 400000;
         Groupe12 test= new Groupe12();
-        test.challenge("colo-test", 1,milli);
+        test.challenge("colo-test", 19,milli);
 //        test.chargerGraphe("colo-test0.txt");
 //         long temps = System.currentTimeMillis();
 //        test.colorierAlea(test.getGraph(),milli);
 //        System.out.println( System.currentTimeMillis() - temps);
 //        test.afficheGraph(test.getGraph());
 
-        
     }
     
 }
