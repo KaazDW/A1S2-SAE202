@@ -23,6 +23,13 @@ import packMesClassesEtInterfaces.SAE202_Interface;
  */
 public class Groupe12 implements SAE202_Interface {
 
+    /**
+     * Calcule les colorations pour un graph donné.
+     *
+     * @param prefixeFichier
+     * @param nbFichiers
+     * @param millisecondes
+     */
     @Override
     public void challenge(String prefixeFichier, Integer nbFichiers, Long millisecondes) {
         int nbGraph = 0;
@@ -30,12 +37,12 @@ public class Groupe12 implements SAE202_Interface {
         long temps2 = 0;
         temps = System.currentTimeMillis();
         for (int i = 0; i < nbFichiers; i++) {
-            if(temps2<millisecondes){
-            System.out.println("grpah nb :" + i);
-            Graph g = charger_graphe(prefixeFichier + i + ".txt");
-            algoWelshPowell(g);
+            if (temps2 < millisecondes) {
+                System.out.println("grpah nb :" + i);
+                Graph g = charger_graphe(prefixeFichier + i + ".txt");
+                algoWelshPowell(g);
 
-            descente(g,(int)(millisecondes/1));
+                descente(g, (int) (millisecondes / 1));
 
 //        long temps = 0;
 //        while (temps < millisecondes - 10000) {
@@ -47,7 +54,7 @@ public class Groupe12 implements SAE202_Interface {
 //                temps=System.currentTimeMillis()-temps;
 //        temps=Math.toIntExact(temps)
 //            System.out.println("graphe numero : " + nbGraph + " nombre de conflit : " + calculeNombreConflits(g));
-            nbGraph++;
+                nbGraph++;
             }
             temps2 = System.currentTimeMillis() - temps;
             System.out.println(temps2);
@@ -56,11 +63,22 @@ public class Groupe12 implements SAE202_Interface {
         System.out.println(" temps d'execution : " + (double) temps2 / 1000 + "s");
     }
 
+    /**
+     * Fonction calculant 10 graph à partir de 10 fichiers de vols
+     * @param prefixeFichier
+     * @param nbFichiers
+     * @param millisecondes
+     */
     @Override
     public void modelisation(String prefixeFichier, Integer nbFichiers, Long millisecondes) {
 
     }
-
+    /**
+     * Fonction de coloration aléatoire du graph passé en paramètre
+     * @param g
+     * @param millisecondes
+     * @return le nombre de conflits
+     */
     public int colorierAlea(Graph g, int millisecondes) {
         int kmax = g.getAttribute("nb_couleurs_max");
         for (Node sommet : g.getEachNode()) {
@@ -69,20 +87,26 @@ public class Groupe12 implements SAE202_Interface {
         return SAE202_Algos.compte_nb_conflits(g, "couleur");
     }
 
+    /**
+     * Fonction appliquant la méthode Descente consistant à parcourir tous les voisins d'une coloration et à prendre la meilleurs, et de recommencer l'opération jusqu'a tomber dans un minimul locale
+     * @param g
+     * @param millisecondes
+     * @return le nombre de conflits
+     */
     public int descente(Graph g, int millisecondes) {
-  
+
         long temps = System.currentTimeMillis();
         long temps2 = 0;
         int cout = 0;
         int coutMinimum = -1;
         int stock = 0;
         int numArrete = -1;
-        boolean rentrer =true;
+        boolean rentrer = true;
         int indiceCoutMin = 0;
         int valeurCouleur = 0;
         int kmax = g.getAttribute("nb_couleurs_max");
-        while (coutMinimum < SAE202_Algos.compte_nb_conflits(g, "couleur") && temps2 < millisecondes && rentrer==true ) {
-            rentrer=false;
+        while (coutMinimum < SAE202_Algos.compte_nb_conflits(g, "couleur") && temps2 < millisecondes && rentrer == true) {
+            rentrer = false;
             for (Edge arrete : g.getEachEdge()) {
                 if (arrete.getNode0().getAttribute("couleur") == arrete.getNode1().getAttribute("couleur")) {
                     cout = SAE202_Algos.compte_nb_conflits(g, "couleur");
@@ -94,7 +118,7 @@ public class Groupe12 implements SAE202_Interface {
                             stock = arrete.getIndex();
                             numArrete = 0;
                             coutMinimum = SAE202_Algos.compte_nb_conflits(g, "couleur");
-                            rentrer =true;
+                            rentrer = true;
                         }
                         arrete.getNode0().setAttribute("couleur", valeurCouleur);
                     }
@@ -106,14 +130,14 @@ public class Groupe12 implements SAE202_Interface {
                             stock = arrete.getIndex();
                             numArrete = 1;
                             coutMinimum = SAE202_Algos.compte_nb_conflits(g, "couleur");
-                            rentrer =true;
+                            rentrer = true;
                         }
                         arrete.getNode1().setAttribute("couleur", valeurCouleur);
                     }
                 }
-               temps2= System.currentTimeMillis() - temps;
+                temps2 = System.currentTimeMillis() - temps;
             }
-             if (numArrete == 0) {
+            if (numArrete == 0) {
                 g.getEdge(stock).getNode0().setAttribute("couleur", indiceCoutMin);
             } else if (numArrete == 1) {
                 g.getEdge(stock).getNode1().setAttribute("couleur", indiceCoutMin);
