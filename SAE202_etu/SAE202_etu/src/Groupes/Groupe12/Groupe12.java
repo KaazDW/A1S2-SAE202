@@ -65,6 +65,7 @@ public class Groupe12 implements SAE202_Interface {
 
     /**
      * Fonction calculant 10 graph à partir de 10 fichiers de vols
+     *
      * @param prefixeFichier
      * @param nbFichiers
      * @param millisecondes
@@ -73,11 +74,13 @@ public class Groupe12 implements SAE202_Interface {
     public void modelisation(String prefixeFichier, Integer nbFichiers, Long millisecondes) {
 
     }
+
     /**
      * Fonction de coloration aléatoire du graph passé en paramètre
+     *
      * @param g
      * @param millisecondes
-     * @return le nombre de conflits
+     * @return le nombre de conflits générés
      */
     public int colorierAlea(Graph g, int millisecondes) {
         int kmax = g.getAttribute("nb_couleurs_max");
@@ -88,10 +91,13 @@ public class Groupe12 implements SAE202_Interface {
     }
 
     /**
-     * Fonction appliquant la méthode Descente consistant à parcourir tous les voisins d'une coloration et à prendre la meilleurs, et de recommencer l'opération jusqu'a tomber dans un minimul locale
+     * Fonction appliquant la méthode Descente consistant à parcourir tous les
+     * voisins d'une coloration et à prendre la meilleurs, et de recommencer
+     * l'opération jusqu'a tomber dans un minimul locale
+     *
      * @param g
      * @param millisecondes
-     * @return le nombre de conflits
+     * @return le nombre de conflits générés
      */
     public int descente(Graph g, int millisecondes) {
 
@@ -150,6 +156,13 @@ public class Groupe12 implements SAE202_Interface {
         return SAE202_Algos.compte_nb_conflits(g, "couleur");
     }
 
+    /**
+     * Cette fonction est destiné à implémenter l'algorithme de coloration de
+     * graph Welsh-Powell
+     *
+     * @param g
+     * @return le nombre de conflits générés
+     */
     public int algoWelshPowell(Graph g) {
         int kmax = g.getAttribute("nb_couleurs_max");
         WelshPowell wp = new WelshPowell("couleur");
@@ -164,6 +177,12 @@ public class Groupe12 implements SAE202_Interface {
         return SAE202_Algos.compte_nb_conflits(g, "couleur");
     }
 
+    /**
+     *  Fonction destiné à implémenter l'algorithme itératif Recuit Simulé
+     * @param g
+     * @param millisecondes
+     * @return le nombre de conflits générés
+     */
     public int recuitSimulé(Graph g, int millisecondes) {
         algoWelshPowell(g);
         int puissance = 1;
