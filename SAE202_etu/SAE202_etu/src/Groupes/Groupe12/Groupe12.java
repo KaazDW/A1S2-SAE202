@@ -25,12 +25,13 @@ public class Groupe12 implements SAE202_Interface {
     public void challenge(String prefixeFichier, Integer nbFichiers, Long millisecondes) {
         int nbGraph = 0;
         long temps = 0;
+                long temps2=0;
         temps = System.currentTimeMillis();
         for (int i = 0; i < nbFichiers; i++) {
             System.out.println("grpah nb :" + i);
             Graph g = charger_graphe(prefixeFichier + i + ".txt");
             colorierAlea(g, 1000);
-            descente(g, 10000);
+            descente(g, 1000);
 
 //        long temps = 0;
 //        while (temps < millisecondes - 10000) {
@@ -44,8 +45,8 @@ public class Groupe12 implements SAE202_Interface {
 //            System.out.println("graphe numero : " + nbGraph + " nombre de conflit : " + calculeNombreConflits(g));
             nbGraph++;
         }
-        temps = System.currentTimeMillis() - temps;
-        System.out.println(" temps d'execution : " + (double) temps / 1000 + "s");
+        temps2 = System.currentTimeMillis() - temps;
+        System.out.println(" temps d'execution : " + (double) temps2 / 1000 + "s");
     }
 
     @Override
@@ -72,6 +73,8 @@ public class Groupe12 implements SAE202_Interface {
     }
 
     public int descente(Graph g, int millisecondes) {
+        long temps = System.currentTimeMillis();
+        long temps2=0;
         int cout = 0;
         int coutMinimum=0;
         int stock = 0;
@@ -79,7 +82,7 @@ public class Groupe12 implements SAE202_Interface {
         int indiceCoutMin = 0;
         int valeurCouleur = 0;
         int kmax = g.getAttribute("nb_couleurs_max");
-       while (coutMinimum < SAE202_Algos.compte_nb_conflits(g, "couleur")) {
+       while (coutMinimum < SAE202_Algos.compte_nb_conflits(g, "couleur")&& temps2<millisecondes) {
                      if (numArrete == 0) {
             g.getEdge(stock).getNode0().setAttribute("couleur", indiceCoutMin);
         } else if(numArrete==1){
@@ -114,7 +117,7 @@ public class Groupe12 implements SAE202_Interface {
                 }
             }
             }
-  
+  temps2 = System.currentTimeMillis()-temps;
         
         System.out.println("nb conflits minimun : " + coutMinimum);
         System.out.println("nb conflits descente : " + SAE202_Algos.compte_nb_conflits(g, "couleur"));
