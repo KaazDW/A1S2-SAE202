@@ -5,6 +5,7 @@
  */
 package sae202_etu;
 import Groupes.Groupe12.*;
+import java.math.BigInteger;
 import org.graphstream.graph.Graph;
 import static packMesClassesEtInterfaces.SAE202_Algos.charger_graphe;
 
@@ -17,14 +18,18 @@ public class SAE202_etu {
     /**
      * @param args the command line arguments
      */
+    
     public static void main(String[] args) {
         // TODO code application logic here
-        int milli=0;
+
+        long milli = 400000;
         Groupe12 test= new Groupe12();
-        test.chargerGraphe("colo-test0.txt");
-         long temps = System.currentTimeMillis();
-        test.colorierAlea(test.getGraph(),milli);
-        System.out.println( System.currentTimeMillis() - temps);
+        test.challenge("colo-test", 1,milli);
+//        test.chargerGraphe("colo-test0.txt");
+//         long temps = System.currentTimeMillis();
+//        test.colorierAlea(test.getGraph(),milli);
+//        System.out.println( System.currentTimeMillis() - temps);
+//        test.afficheGraph(test.getGraph());
 
         
     }
