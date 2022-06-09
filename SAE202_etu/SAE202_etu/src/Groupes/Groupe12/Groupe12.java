@@ -26,10 +26,15 @@ import packMesClassesEtInterfaces.SAE202_Interface;
 import java.io.*;
 
 /**
- *
- *
+ * Classe du projet
+ * 
  */
 public class Groupe12 implements SAE202_Interface {
+/**
+ * Constructeur par défauts
+ */
+    public Groupe12() {
+    }
 
     /**
      * Calcule les colorations pour un graph donné.
@@ -49,7 +54,7 @@ public class Groupe12 implements SAE202_Interface {
             if (temps2 < millisecondes) {
                 Graph g = charger_graphe(prefixeFichier + i + ".txt");
                 algoWelshPowell(g);
-//                recuitSimulé(g, (int) (millisecondes / 1));
+
                 listNbColor.add(colorier(g, (int) (millisecondes / 1)));
                 nbGraph++;
                 SAE202_Algos.sauver_coloration(g, prefixeFichier, 12);
@@ -80,7 +85,6 @@ public class Groupe12 implements SAE202_Interface {
      * @param prefixeFichier Préfixe du nom du fichier (exemple : "prefixeFichierY.csv" avec Y = numéro du fichier en question);
      * @param nbFichiers Le nombre de fichiers a traiter (les indices des fichiers débutent à 0.
      * @param millisecondes Durée maximum prévu pour l'execution de la fonction
-     * @throws java.io.IOException
      */
     @Override
     public void modelisation(String prefixeFichier, Integer nbFichiers, Long millisecondes) {
@@ -90,14 +94,8 @@ public class Groupe12 implements SAE202_Interface {
 
     /**
      * Fonction de coloration aléatoire du graph passé en paramètre
-<<<<<<< Updated upstream
      * @param g Graph à traiter
      * @param millisecondes Durée maximum prévu pour l'execution de la fonction
-=======
-     *
-     * @param gGraph a traité
-     * @param millisecondes
->>>>>>> Stashed changes
      * @return le nombre de conflits générés
      */
     public int colorierAlea(Graph g, int millisecondes) {
@@ -111,16 +109,10 @@ public class Groupe12 implements SAE202_Interface {
     /**
      * Fonction appliquant la méthode Descente consistant à parcourir tous les
      * voisins d'une coloration et à prendre la meilleurs, et de recommencer
-<<<<<<< Updated upstream
      * l'opération jusqu'a tomber dans un minimul locale.
      * @param g Graph à traiter
      * @param millisecondes Durée maximum prévu pour l'execution de la fonction
-=======
      * l'opération jusqu'a tomber dans un minimul locale
-     *
-     * @param gGraph a traité
-     * @param millisecondes
->>>>>>> Stashed changes
      * @return le nombre de conflits générés
      */
     public int descente(Graph g, int millisecondes) {
@@ -186,12 +178,7 @@ public class Groupe12 implements SAE202_Interface {
     /**
      * Cette fonction est destiné à implémenter l'algorithme de coloration de
      * graph Welsh-Powell
-<<<<<<< Updated upstream
      * @param g Graph à traiter
-=======
-     *
-     * @param g Graph a traité
->>>>>>> Stashed changes
      * @return le nombre de conflits générés
      */
     public int algoWelshPowell(Graph g) {
@@ -208,16 +195,10 @@ public class Groupe12 implements SAE202_Interface {
     }
 
     /**
-<<<<<<< Updated upstream
+
      *  Fonction destiné à implémenter l'algorithme itératif Recuit Simulé
      * @param g Graph à traiter
      * @param millisecondes Durée maximum prévu pour l'execution de la fonction
-=======
-     * Fonction destiné à implémenter l'algorithme itératif Recuit Simulé
-     *
-     * @param g Graph a traité
-     * @param millisecondes
->>>>>>> Stashed changes
      * @return le nombre de conflits générés
      */
     public int recuitSimulé(Graph g, int millisecondes) {
@@ -297,7 +278,6 @@ public class Groupe12 implements SAE202_Interface {
         System.out.println("appres algo recruit : " + SAE202_Algos.compte_nb_conflits(g, "couleur"));
         return SAE202_Algos.compte_nb_conflits(g, "couleur");
     }
-<<<<<<< Updated upstream
     
     /**
      * Fonction colorier vissant à appliquer la méthode Descente au Graph en question, avec la durée maximum défini en paramètre.
@@ -305,13 +285,8 @@ public class Groupe12 implements SAE202_Interface {
      * @param millisecondes Durée maximum prévu pour l'execution de la fonction
      * @return la fonction Descente
      */
-    public int colorier(Graph g, int millisecondes){
-        return descente(g,millisecondes);
-=======
-
     public int colorier(Graph g, int millisecondes) {
         return descente(g, millisecondes);
->>>>>>> Stashed changes
     }
     
    

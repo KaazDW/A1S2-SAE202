@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"Groupes.Groupe12"},{"l":"sae202_etu"}];updateSearchResults();

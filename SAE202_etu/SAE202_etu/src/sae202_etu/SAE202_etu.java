@@ -10,12 +10,18 @@ import org.graphstream.graph.Graph;
 import static packMesClassesEtInterfaces.SAE202_Algos.charger_graphe;
 
 /**
- *
+ * Classe main
  * @author brice.effantin
  */
 public class SAE202_etu {
+/**
+ * Constructeur par défaut
+ */
+    public SAE202_etu() {
+    }
 
     /**
+     * Classe main
      * @param args the command line arguments
      */
     
