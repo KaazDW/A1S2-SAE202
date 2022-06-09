@@ -6,11 +6,15 @@
 package Groupes.Groupe12;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.graphstream.algorithm.coloring.WelshPowell;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
@@ -19,6 +23,7 @@ import packMesClassesEtInterfaces.SAE202_Algos;
 import static packMesClassesEtInterfaces.SAE202_Algos.charger_graphe;
 import static packMesClassesEtInterfaces.SAE202_Algos.compte_nb_conflits;
 import packMesClassesEtInterfaces.SAE202_Interface;
+import java.io.*;
 
 /**
  *
@@ -42,32 +47,29 @@ public class Groupe12 implements SAE202_Interface {
         temps = System.currentTimeMillis();
         for (int i = 0; i < nbFichiers; i++) {
             if (temps2 < millisecondes) {
-                System.out.println("grpah nb :" + i);
                 Graph g = charger_graphe(prefixeFichier + i + ".txt");
                 algoWelshPowell(g);
 //                recuitSimulé(g, (int) (millisecondes / 1));
                 listNbColor.add(colorier(g, (int) (millisecondes / 1)));
                 nbGraph++;
                 SAE202_Algos.sauver_coloration(g, prefixeFichier, 12);
-               
+
             }
             temps2 = System.currentTimeMillis() - temps;
         }
         ligne.getParentFile().mkdirs();
-        try{
-            try (FileWriter fileWriter = new FileWriter(ligne)) {
-                fileWriter.append("numerode fichier");
-                fileWriter.append(';'); //changer de colonne
-                fileWriter.append("nb cpnflits");
-                for(int i= 0 ; i<nbFichiers;i++){
-                fileWriter.append('\n');
-                fileWriter.append(""+i);
-                fileWriter.append(';');
-                fileWriter.append(""+listNbColor.get(i));
+        try {
+            try ( FileWriter fileWriter = new FileWriter(ligne)) {
+
+                for (int i = 0; i < nbFichiers; i++) {
+                    fileWriter.append(prefixeFichier + "" + i + ".txt");
+                    fileWriter.append(';');
+                    fileWriter.append("" + listNbColor.get(i));
+                    fileWriter.append('\n');
                 }
             }
-        }catch(Exception ee){
-            System.out.println("fail1");
+        } catch (Exception ee) {
+
         }
         temps2 = System.currentTimeMillis() - temps;
         System.out.println(" temps d'execution : " + (double) temps2 / 1000 + "s");
@@ -82,11 +84,20 @@ public class Groupe12 implements SAE202_Interface {
      */
     @Override
     public void modelisation(String prefixeFichier, Integer nbFichiers, Long millisecondes) {
+
+
     }
+
     /**
      * Fonction de coloration aléatoire du graph passé en paramètre
+<<<<<<< Updated upstream
      * @param g Graph à traiter
      * @param millisecondes Durée maximum prévu pour l'execution de la fonction
+=======
+     *
+     * @param gGraph a traité
+     * @param millisecondes
+>>>>>>> Stashed changes
      * @return le nombre de conflits générés
      */
     public int colorierAlea(Graph g, int millisecondes) {
@@ -100,9 +111,16 @@ public class Groupe12 implements SAE202_Interface {
     /**
      * Fonction appliquant la méthode Descente consistant à parcourir tous les
      * voisins d'une coloration et à prendre la meilleurs, et de recommencer
+<<<<<<< Updated upstream
      * l'opération jusqu'a tomber dans un minimul locale.
      * @param g Graph à traiter
      * @param millisecondes Durée maximum prévu pour l'execution de la fonction
+=======
+     * l'opération jusqu'a tomber dans un minimul locale
+     *
+     * @param gGraph a traité
+     * @param millisecondes
+>>>>>>> Stashed changes
      * @return le nombre de conflits générés
      */
     public int descente(Graph g, int millisecondes) {
@@ -168,7 +186,12 @@ public class Groupe12 implements SAE202_Interface {
     /**
      * Cette fonction est destiné à implémenter l'algorithme de coloration de
      * graph Welsh-Powell
+<<<<<<< Updated upstream
      * @param g Graph à traiter
+=======
+     *
+     * @param g Graph a traité
+>>>>>>> Stashed changes
      * @return le nombre de conflits générés
      */
     public int algoWelshPowell(Graph g) {
@@ -185,13 +208,20 @@ public class Groupe12 implements SAE202_Interface {
     }
 
     /**
+<<<<<<< Updated upstream
      *  Fonction destiné à implémenter l'algorithme itératif Recuit Simulé
      * @param g Graph à traiter
      * @param millisecondes Durée maximum prévu pour l'execution de la fonction
+=======
+     * Fonction destiné à implémenter l'algorithme itératif Recuit Simulé
+     *
+     * @param g Graph a traité
+     * @param millisecondes
+>>>>>>> Stashed changes
      * @return le nombre de conflits générés
      */
     public int recuitSimulé(Graph g, int millisecondes) {
-   long temps = System.currentTimeMillis();
+        long temps = System.currentTimeMillis();
         long temps2 = 0;
         int cout = 0;
         int coutMinimum = -1;
@@ -206,7 +236,7 @@ public class Groupe12 implements SAE202_Interface {
         int valeurCouleur = 0;
         int kmax = g.getAttribute("nb_couleurs_max");
         int puissance = 1;
-        while (temps2 < millisecondes && rentrer ==true) {
+        while (temps2 < millisecondes && rentrer == true) {
             rentrer = false;
             double risque = Math.pow(0.5, puissance) * 30;
             //boucle pour incrementer puissance tout les 10
@@ -264,9 +294,10 @@ public class Groupe12 implements SAE202_Interface {
             puissance++;
             temps2 = System.currentTimeMillis() - temps;
         }
-        System.out.println("appres algo recruit : "+SAE202_Algos.compte_nb_conflits(g, "couleur"));
+        System.out.println("appres algo recruit : " + SAE202_Algos.compte_nb_conflits(g, "couleur"));
         return SAE202_Algos.compte_nb_conflits(g, "couleur");
     }
+<<<<<<< Updated upstream
     
     /**
      * Fonction colorier vissant à appliquer la méthode Descente au Graph en question, avec la durée maximum défini en paramètre.
@@ -276,6 +307,13 @@ public class Groupe12 implements SAE202_Interface {
      */
     public int colorier(Graph g, int millisecondes){
         return descente(g,millisecondes);
+=======
+
+    public int colorier(Graph g, int millisecondes) {
+        return descente(g, millisecondes);
+>>>>>>> Stashed changes
     }
+    
+   
 
 }

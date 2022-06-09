@@ -25,7 +25,7 @@ public class SAE202_etu {
         long milli = 4000000;
         Groupe12 test= new Groupe12();
         test.challenge("colo-test",20,milli);
-
+            test.modelisation("colo-test", 20, milli);
     }
     
 }
