@@ -5,6 +5,9 @@
  */
 package Groupes.Groupe12;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -32,32 +35,40 @@ public class Groupe12 implements SAE202_Interface {
      */
     @Override
     public void challenge(String prefixeFichier, Integer nbFichiers, Long millisecondes) {
+        ArrayList<Integer> listNbColor = new ArrayList<Integer>();
         int nbGraph = 0;
         long temps = 0;
         long temps2 = 0;
+        File ligne = new File("Resultats/coloration-groupe12.csv");
         temps = System.currentTimeMillis();
         for (int i = 0; i < nbFichiers; i++) {
             if (temps2 < millisecondes) {
                 System.out.println("grpah nb :" + i);
                 Graph g = charger_graphe(prefixeFichier + i + ".txt");
                 algoWelshPowell(g);
-
-                descente(g, (int) (millisecondes / 1));
-
-//        long temps = 0;
-//        while (temps < millisecondes - 10000) {
-//            temps = System.currentTimeMillis();
-//              //apelle colorier
-//            temps = System.currentTimeMillis() - temps;
-//        }
-//                   long temps=System.currentTimeMillis();
-//                temps=System.currentTimeMillis()-temps;
-//        temps=Math.toIntExact(temps)
-//            System.out.println("graphe numero : " + nbGraph + " nombre de conflit : " + calculeNombreConflits(g));
+//                recuitSimulé(g, (int) (millisecondes / 1));
+                listNbColor.add(colorier(g, (int) (millisecondes / 1)));
                 nbGraph++;
+                SAE202_Algos.sauver_coloration(g, prefixeFichier, 12);
+               
             }
             temps2 = System.currentTimeMillis() - temps;
-            System.out.println(temps2);
+        }
+        ligne.getParentFile().mkdirs();
+        try{
+            try (FileWriter fileWriter = new FileWriter(ligne)) {
+                fileWriter.append("numerode fichier");
+                fileWriter.append(';'); //changer de colonne
+                fileWriter.append("nb cpnflits");
+                for(int i= 0 ; i<nbFichiers;i++){
+                fileWriter.append('\n');
+                fileWriter.append(""+i);
+                fileWriter.append(';');
+                fileWriter.append(""+listNbColor.get(i));
+                }
+            }
+        }catch(Exception ee){
+            System.out.println("fail1");
         }
         temps2 = System.currentTimeMillis() - temps;
         System.out.println(" temps d'execution : " + (double) temps2 / 1000 + "s");
@@ -69,12 +80,11 @@ public class Groupe12 implements SAE202_Interface {
      * @param prefixeFichier
      * @param nbFichiers
      * @param millisecondes
+     * @throws java.io.IOException
      */
     @Override
     public void modelisation(String prefixeFichier, Integer nbFichiers, Long millisecondes) {
-
     }
-
     /**
      * Fonction de coloration aléatoire du graph passé en paramètre
      *
@@ -119,6 +129,7 @@ public class Groupe12 implements SAE202_Interface {
                     for (int i = 0; i < kmax; i++) {
                         valeurCouleur = arrete.getNode0().getAttribute("couleur");
                         arrete.getNode0().setAttribute("couleur", i);
+
                         if (SAE202_Algos.compte_nb_conflits(g, "couleur") < cout) {
                             indiceCoutMin = i;
                             stock = arrete.getIndex();
@@ -127,10 +138,12 @@ public class Groupe12 implements SAE202_Interface {
                             rentrer = true;
                         }
                         arrete.getNode0().setAttribute("couleur", valeurCouleur);
+
                     }
                     for (int i = 0; i < kmax; i++) {
                         valeurCouleur = arrete.getNode1().getAttribute("couleur");
                         arrete.getNode1().setAttribute("couleur", i);
+
                         if (SAE202_Algos.compte_nb_conflits(g, "couleur") < cout) {
                             indiceCoutMin = i;
                             stock = arrete.getIndex();
@@ -139,6 +152,7 @@ public class Groupe12 implements SAE202_Interface {
                             rentrer = true;
                         }
                         arrete.getNode1().setAttribute("couleur", valeurCouleur);
+
                     }
                 }
                 temps2 = System.currentTimeMillis() - temps;
@@ -150,9 +164,8 @@ public class Groupe12 implements SAE202_Interface {
 
             }
         }
-
-        System.out.println("nb conflits minimun : " + coutMinimum);
-        System.out.println("nb conflits descente : " + SAE202_Algos.compte_nb_conflits(g, "couleur"));
+//        System.out.println("nb conflits minimun : " + coutMinimum);
+//        System.out.println("nb conflits descente : " + SAE202_Algos.compte_nb_conflits(g, "couleur"));
         return SAE202_Algos.compte_nb_conflits(g, "couleur");
     }
 
@@ -173,7 +186,6 @@ public class Groupe12 implements SAE202_Interface {
                 sommet.setAttribute("couleur", (int) Math.random() * kmax);
             }
         }
-        System.out.println("nb conflits Powell : " + SAE202_Algos.compte_nb_conflits(g, "couleur"));
         return SAE202_Algos.compte_nb_conflits(g, "couleur");
     }
 
@@ -184,14 +196,85 @@ public class Groupe12 implements SAE202_Interface {
      * @return le nombre de conflits générés
      */
     public int recuitSimulé(Graph g, int millisecondes) {
-        algoWelshPowell(g);
+   long temps = System.currentTimeMillis();
+        long temps2 = 0;
+        int cout = 0;
+        int coutMinimum = -1;
+        int coutMinimumEleve = -1;
+        int stock = 0;
+        int stockEleve = 0;
+        int numArrete = -1;
+        int numArreteEleve = -1;
+        boolean rentrer = true;
+        int indiceCoutMin = 0;
+        int indiceCoutMinEleve = 0;
+        int valeurCouleur = 0;
+        int kmax = g.getAttribute("nb_couleurs_max");
         int puissance = 1;
-        double risque = Math.pow(0.5, puissance) * 30;
-        for (int i = 0; i < 50; i++) {
-
+        while (temps2 < millisecondes && rentrer ==true) {
+            rentrer = false;
+            double risque = Math.pow(0.5, puissance) * 30;
+            //boucle pour incrementer puissance tout les 10
+            for (int j = 0; j < 10; j++) {
+                //parcours des arrete
+                for (Edge arrete : g.getEachEdge()) {
+                    //Verification des conflits
+                    if (arrete.getNode0().getAttribute("couleur") == arrete.getNode1().getAttribute("couleur")) {
+                        cout = SAE202_Algos.compte_nb_conflits(g, "couleur");
+                        //boucle qui parcours les valeurs de nos couleurs possible pour le node0
+                        for (int i = 0; i < kmax; i++) {
+                            valeurCouleur = arrete.getNode0().getAttribute("couleur");
+                            arrete.getNode0().setAttribute("couleur", i);
+                            //condition qui verifie que le coup du graphe voisin soit plus petit
+                            if (SAE202_Algos.compte_nb_conflits(g, "couleur") < cout) {
+                                indiceCoutMin = i;
+                                stock = arrete.getIndex();
+                                numArrete = 0;
+                                coutMinimum = SAE202_Algos.compte_nb_conflits(g, "couleur");
+                                rentrer = true;
+                            } else {
+                                if (Math.random() < Math.exp((cout - SAE202_Algos.compte_nb_conflits(g, "couleur")) / risque)) {
+                                    indiceCoutMinEleve = i;
+                                    stockEleve = arrete.getIndex();
+                                    numArreteEleve = 0;
+                                    coutMinimumEleve = SAE202_Algos.compte_nb_conflits(g, "couleur");
+                                }
+                            }
+                            arrete.getNode0().setAttribute("couleur", valeurCouleur);
+                        }
+                        //boucle qui parcours les valeurs de nos couleurs possible pour le node1
+                        for (int i = 0; i < kmax; i++) {
+                            valeurCouleur = arrete.getNode1().getAttribute("couleur");
+                            arrete.getNode1().setAttribute("couleur", i);
+                            //condition qui verifie que le coup du graphe voisin soit plus petit
+                            if (SAE202_Algos.compte_nb_conflits(g, "couleur") < cout) {
+                                indiceCoutMin = i;
+                                stock = arrete.getIndex();
+                                numArrete = 1;
+                                coutMinimum = SAE202_Algos.compte_nb_conflits(g, "couleur");
+                                rentrer = true;
+                            } else {
+                                if (Math.random() < Math.exp((cout - SAE202_Algos.compte_nb_conflits(g, "couleur")) / risque)) {
+                                    indiceCoutMinEleve = i;
+                                    stockEleve = arrete.getIndex();
+                                    numArreteEleve = 1;
+                                    coutMinimumEleve = SAE202_Algos.compte_nb_conflits(g, "couleur");
+                                }
+                            }
+                            arrete.getNode1().setAttribute("couleur", valeurCouleur);
+                        }
+                    }
+                }
+            }
             puissance++;
+            temps2 = System.currentTimeMillis() - temps;
         }
-
+        System.out.println("appres algo recruit : "+SAE202_Algos.compte_nb_conflits(g, "couleur"));
         return SAE202_Algos.compte_nb_conflits(g, "couleur");
     }
+    
+    public int colorier(Graph g, int millisecondes){
+        return descente(g,millisecondes);
+    }
+
 }
